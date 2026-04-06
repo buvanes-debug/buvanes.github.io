@@ -1,83 +1,579 @@
 <!DOCTYPE html>
-<html lang="pt"> 
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Loja de Joias</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fdfdfd;
-            color: #333;
-        }
-        header {
-            background-color: #b8860b;
-            color: white;
-            text-align: center;
-            padding: 2rem 1rem;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-        }
-        header p {
-            font-size: 1.2rem;
-        }
-        main {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 1rem;
-            text-align: center;
-        }
-        main h2 {
-            color: #b8860b;
-        }
-        .btn {
-            display: inline-block;
-            margin-top: 2rem;
-            padding: 1rem 2rem;
-            background-color: #b8860b;
-            color: white;
-            font-size: 1.2rem;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-        .btn:hover {
-            background-color: #8b6508;
-        }
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: #f1f1f1;
-            margin-top: 3rem;
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FFIMS — Supervisor Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --border: #e2e1da;
+    --text: #1a1a18;
+    --muted: #6b6b66;
+    --accent: #2563eb;
+    --accent-bg: #eff6ff;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --amber: #b45309;
+    --amber-bg: #fffbeb;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --gray: #374151;
+    --gray-bg: #f9fafb;
+    --progress-track: #e5e7eb;
+    --progress-fill: #2563eb;
+    --shadow: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+    --radius: 12px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  html.dark {
+    --bg: #111110;
+    --surface: #1c1c1a;
+    --surface2: #242422;
+    --border: #2e2e2b;
+    --text: #e8e8e2;
+    --muted: #8a8a82;
+    --accent: #3b82f6;
+    --accent-bg: #1e3a5f;
+    --green: #4ade80;
+    --green-bg: #052e16;
+    --amber: #fbbf24;
+    --amber-bg: #1c1008;
+    --red: #f87171;
+    --red-bg: #1f0707;
+    --gray: #d1d5db;
+    --gray-bg: #1f1f1d;
+    --progress-track: #2e2e2b;
+    --progress-fill: #3b82f6;
+    --shadow: 0 1px 3px rgba(0,0,0,.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.4);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 28px 24px;
+    transition: background .25s, color .25s;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .supervisor-page {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── Topbar ── */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    letter-spacing: .18em;
+    color: var(--accent);
+    font-size: .72rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .topbar h1 {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+    letter-spacing: -.02em;
+  }
+
+  .subtitle {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: .875rem;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .action-btn {
+    font-family: var(--font);
+    font-size: .85rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: background .15s, border-color .15s, transform .1s;
+  }
+
+  .action-btn:hover { background: var(--surface2); border-color: var(--muted); }
+  .action-btn:active { transform: scale(.97); }
+
+  .action-btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .action-btn.primary:hover { opacity: .88; }
+
+  .theme-toggle {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  /* ── Stats Grid ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: background .25s, border-color .25s, box-shadow .15s;
+  }
+
+  .card:hover { box-shadow: var(--shadow-md); }
+
+  .stat-card {
+    padding: 20px 22px 18px;
+  }
+
+  .stat-card p {
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .stat-card h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -.03em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-card span {
+    font-size: .78rem;
+    color: var(--muted);
+  }
+
+  /* ── Content Grid ── */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 680px) { .content-grid { grid-template-columns: 1fr; } }
+
+  .panel { padding: 22px; }
+
+  .panel h3 {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  /* ── Task List ── */
+  .task-list, .team-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .task-item, .team-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: background .15s;
+  }
+
+  .task-item:hover, .team-item:hover { border-color: var(--muted); }
+
+  .task-item strong, .team-item strong {
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--text);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .task-item p, .team-item p {
+    font-size: .78rem;
+    color: var(--muted);
+  }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: .73rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .badge.in-progress { background: var(--accent-bg); color: var(--accent); }
+  .badge.pending     { background: var(--amber-bg);  color: var(--amber); }
+  .badge.completed   { background: var(--green-bg);  color: var(--green); }
+  .badge.working     { background: var(--green-bg);  color: var(--green); }
+  .badge.on-break    { background: var(--amber-bg);  color: var(--amber); }
+  .badge.absent      { background: var(--red-bg);    color: var(--red); }
+
+  /* ── Progress ── */
+  .progress-block {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 6px 12px;
+    margin-bottom: 16px;
+  }
+
+  .progress-block:last-child { margin-bottom: 0; }
+
+  .progress-block label {
+    font-size: .845rem;
+    font-weight: 500;
+    color: var(--text);
+    grid-column: 1;
+  }
+
+  .progress-block span {
+    font-family: var(--mono);
+    font-size: .78rem;
+    color: var(--muted);
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: center;
+  }
+
+  .progress-bar {
+    grid-column: 1;
+    height: 6px;
+    background: var(--progress-track);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-bar div {
+    height: 100%;
+    background: var(--progress-fill);
+    border-radius: 99px;
+    transition: width .6s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* ── Modal ── */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-backdrop.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 24px 64px rgba(0,0,0,.2);
+    padding: 28px;
+    width: min(420px, 90vw);
+    animation: pop .18s ease;
+  }
+
+  @keyframes pop {
+    from { transform: scale(.95); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .modal h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 18px;
+    letter-spacing: -.01em;
+  }
+
+  .field { margin-bottom: 14px; }
+
+  .field label {
+    display: block;
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 5px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    font-family: var(--font);
+    font-size: .875rem;
+    padding: 9px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s;
+  }
+
+  .field input:focus, .field select:focus { border-color: var(--accent); }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  /* ── Fade in on load ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .stats-grid .card { animation: fadeUp .3s ease both; }
+  .stats-grid .card:nth-child(1) { animation-delay: .05s; }
+  .stats-grid .card:nth-child(2) { animation-delay: .1s; }
+  .stats-grid .card:nth-child(3) { animation-delay: .15s; }
+  .stats-grid .card:nth-child(4) { animation-delay: .2s; }
+  .content-grid .card { animation: fadeUp .3s .25s ease both; }
+  .supervisor-page > .card { animation: fadeUp .3s .3s ease both; }
+</style>
 </head>
 <body>
-    <header>
-        <h1>NG Joias</h1>
-        <p>Beleza e exclusividade em cada detalhe ✨</p>
-    </header>
 
-    <main>
-        <h2>Bem-vindo(a) à nossa loja!</h2>
-        <p>
-            A <strong>NG Joias</strong> nasceu com a missão de oferecer elegância, sofisticação e qualidade em cada peça. 
-            Aqui você encontra joias únicas que refletem beleza, estilo e exclusividade.
-        </p>
-        <p>
-            Trabalhamos com materiais de alta qualidade e design moderno, para que cada cliente brilhe em todos os momentos especiais.
-        </p>
+<div class="supervisor-page">
 
-        <a href="prototipo.html" class="btn">Ver Produtos</a>
-    </main>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">FFIMS</p>
+      <h1>Supervisor Dashboard</h1>
+      <p class="subtitle">Monitor tasks, team performance, and project progress • <span id="today-date"></span></p>
+    </div>
+    <div class="header-actions">
+      <button class="action-btn primary" onclick="openModal()">+ New Task</button>
+      <button class="action-btn theme-toggle" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    </div>
+  </header>
 
-    <footer>
-        <p>&copy; 2025 NG Joias. Todos os direitos reservados.</p>
-    </footer>
+  <!-- Stats -->
+  <section class="stats-grid" id="stats-grid"></section>
+
+  <!-- Tasks + Team -->
+  <section class="content-grid">
+    <div class="card panel">
+      <h3>Today's Tasks</h3>
+      <div class="task-list" id="task-list"></div>
+    </div>
+    <div class="card panel">
+      <h3>Team Status</h3>
+      <div class="team-list" id="team-list"></div>
+    </div>
+  </section>
+
+  <!-- Progress -->
+  <section class="card panel">
+    <h3>Project Progress</h3>
+    <div id="progress-list"></div>
+  </section>
+
+</div>
+
+<!-- New Task Modal -->
+<div class="modal-backdrop" id="modal" onclick="handleBackdropClick(event)">
+  <div class="modal">
+    <h4>New Task</h4>
+    <div class="field">
+      <label>Title</label>
+      <input type="text" id="task-title" placeholder="e.g. Inspect Building B lighting"/>
+    </div>
+    <div class="field">
+      <label>Owner</label>
+      <select id="task-owner">
+        <option>John</option>
+        <option>Mary</option>
+        <option>Brian</option>
+        <option>Tendai</option>
+        <option>Supervisor</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Due</label>
+      <input type="text" id="task-due" placeholder="e.g. Today, 3 PM, Tomorrow"/>
+    </div>
+    <div class="modal-actions">
+      <button class="action-btn" onclick="closeModal()">Cancel</button>
+      <button class="action-btn primary" onclick="addTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Data ──────────────────────────────────────────────
+  const stats = [
+    { label: "Tasks Completed", value: "75%",  note: "Up 8% from last week" },
+    { label: "Team Online",     value: "8/12", note: "3 on break, 1 absent" },
+    { label: "Overdue Tasks",   value: "3",    note: "Needs attention today" },
+    { label: "Active Projects", value: "5",    note: "2 due this week" },
+  ];
+
+  let tasks = [
+    { title: "Inspect Building A lighting",       status: "In Progress", owner: "John",       due: "Today" },
+    { title: "Approve maintenance request #204",  status: "Pending",     owner: "Supervisor", due: "2 PM" },
+    { title: "Review shift report",               status: "Completed",   owner: "Mary",       due: "Done" },
+  ];
+
+  const team = [
+    { name: "John",   role: "Technician", status: "Working" },
+    { name: "Mary",   role: "Cleaner",    status: "Working" },
+    { name: "Brian",  role: "Driver",     status: "On Break" },
+    { name: "Tendai", role: "Assistant",  status: "Absent" },
+  ];
+
+  const progress = [
+    { label: "Maintenance Schedule", pct: 68 },
+    { label: "Daily Inspections",    pct: 84 },
+    { label: "Report Review",        pct: 52 },
+  ];
+
+  // ── Date ─────────────────────────────────────────────
+  const d = new Date();
+  document.getElementById('today-date').textContent =
+    d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+  // ── Render Stats ──────────────────────────────────────
+  const statsGrid = document.getElementById('stats-grid');
+  stats.forEach(s => {
+    statsGrid.innerHTML += `
+      <div class="card stat-card">
+        <p>${s.label}</p>
+        <h2>${s.value}</h2>
+        <span>${s.note}</span>
+      </div>`;
+  });
+
+  // ── Render Tasks ──────────────────────────────────────
+  function renderTasks() {
+    const list = document.getElementById('task-list');
+    list.innerHTML = tasks.map(t => {
+      const cls = t.status.toLowerCase().replace(/ /g, '-');
+      return `
+        <div class="task-item">
+          <div>
+            <strong>${t.title}</strong>
+            <p>${t.owner} • Due ${t.due}</p>
+          </div>
+          <span class="badge ${cls}">${t.status}</span>
+        </div>`;
+    }).join('');
+  }
+  renderTasks();
+
+  // ── Render Team ───────────────────────────────────────
+  const teamList = document.getElementById('team-list');
+  team.forEach(p => {
+    const cls = p.status.toLowerCase().replace(/ /g, '-');
+    teamList.innerHTML += `
+      <div class="team-item">
+        <div>
+          <strong>${p.name}</strong>
+          <p>${p.role}</p>
+        </div>
+        <span class="badge ${cls}">${p.status}</span>
+      </div>`;
+  });
+
+  // ── Render Progress ───────────────────────────────────
+  const progList = document.getElementById('progress-list');
+  progress.forEach(p => {
+    progList.innerHTML += `
+      <div class="progress-block">
+        <label>${p.label}</label>
+        <div class="progress-bar"><div style="width:${p.pct}%"></div></div>
+        <span>${p.pct}%</span>
+      </div>`;
+  });
+
+  // ── Dark Mode ─────────────────────────────────────────
+  const btn = document.getElementById('theme-btn');
+  let dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  function applyTheme() {
+    document.documentElement.classList.toggle('dark', dark);
+    btn.textContent = dark ? '☀️' : '🌙';
+  }
+
+  function toggleTheme() { dark = !dark; applyTheme(); }
+  applyTheme();
+
+  // ── Modal ─────────────────────────────────────────────
+  function openModal()  { document.getElementById('modal').classList.add('open'); }
+  function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+  function handleBackdropClick(e) {
+    if (e.target === document.getElementById('modal')) closeModal();
+  }
+
+  function addTask() {
+    const title = document.getElementById('task-title').value.trim();
+    const owner = document.getElementById('task-owner').value;
+    const due   = document.getElementById('task-due').value.trim() || 'TBD';
+    if (!title) { document.getElementById('task-title').focus(); return; }
+    tasks.unshift({ title, status: 'Pending', owner, due });
+    renderTasks();
+    document.getElementById('task-title').value = '';
+    document.getElementById('task-due').value = '';
+    closeModal();
+  }
+</script>
 </body>
-<script src="dashboard.jsx"></script>
 </html>
