@@ -102,4 +102,54 @@
         </div>
         <div class="card stat-card">
           <p>Team Online</p>
-          <h2>8/12
+          <h2>8/12</h2>
+          <span>3 on break, 1 absent</span>
+        </div>
+        <div class="card stat-card">
+          <p>Overdue Tasks</p>
+          <h2>3</h2>
+          <span>Needs attention today</span>
+        </div>
+        <div class="card stat-card">
+          <p>Active Projects</p>
+          <h2>5</h2>
+          <span>2 due this week</span>
+        </div>
+      </section>
+
+      <!-- Tasks + Team + Progress (copie o resto do seu JSX como HTML) -->
+      <section class="content-grid">
+        <div class="card panel">
+          <h3>Today's Tasks</h3>
+          <div class="task-list">
+            <div class="task-item">
+              <div>
+                <strong>Inspect Building A lighting</strong>
+                <p>John • Due Today</p>
+              </div>
+              <span class="badge in-progress">In Progress</span>
+            </div>
+            <!-- Mais tasks... -->
+          </div>
+        </div>
+        <!-- Team section... -->
+      </section>
+    </div>
+
+    <script>
+      function showDashboard() {
+        document.getElementById('landing').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+      }
+      
+      function toggleTheme() {
+        document.documentElement.classList.toggle('dark');
+      }
+      
+      // Auto dark mode
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+  </body>
+</html>
